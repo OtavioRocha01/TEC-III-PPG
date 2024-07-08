@@ -43,27 +43,38 @@ class Aluno:
           self.local_publicacao1 = linha.get('Local de publicação')
           self.tipo_publicacao1 = linha.get('Tipo da publicação')
           self.qualis_publicacao1 = linha.get('Qualis do local de publicação')
+          self.nota_publicacao1 = 0.0
           self.comprovacao_publicacao1 = linha.get('Comprovação de publicação ou aceite de publicação (PDF)')
+          self.primeiro_autor1 = linha.get('Primeiro autor')
           self.titulo_publicacao2 = linha.get('Título da publicação')
           self.local_publicacao2 = linha.get('Local de publicação')
           self.tipo_publicacao2 = linha.get('Tipo da publicação')
           self.qualis_publicacao2 = linha.get('Qualis do local de publicação')
+          self.nota_publicacao2 = 0.0
           self.comprovacao_publicacao2 = linha.get('Comprovação de publicação ou aceite de publicação (PDF)')
+          self.primeiro_autor2 = linha.get('Primeiro autor')
           self.titulo_publicacao3 = linha.get('Título da publicação')
           self.local_publicacao3 = linha.get('Local de publicação')
           self.tipo_publicacao3 = linha.get('Tipo da publicação')
           self.qualis_publicacao3 = linha.get('Qualis do local de publicação')
+          self.nota_publicacao3 = 0.0
           self.comprovacao_publicacao3 = linha.get('Comprovação de publicação ou aceite de publicação (PDF)')
+          self.primeiro_autor3 = linha.get('Primeiro autor')
           self.titulo_publicacao4 = linha.get('Título da publicação')
           self.local_publicacao4 = linha.get('Local de publicação')
           self.tipo_publicacao4 = linha.get('Tipo da publicação')
           self.qualis_publicacao4 = linha.get('Qualis do local de publicação')
+          self.nota_publicacao4 = 0.0
           self.comprovacao_publicacao4 = linha.get('Comprovação de publicação ou aceite de publicação (PDF)')
+          self.primeiro_autor4 = linha.get('Primeiro autor')
           self.titulo_publicacao5 = linha.get('Título da publicação')
           self.local_publicacao5 = linha.get('Local de publicação')
           self.tipo_publicacao5 = linha.get('Tipo da publicação')
           self.qualis_publicacao5 = linha.get('Qualis do local de publicação')
+          self.nota_publicacao5 = 0.0
           self.comprovacao_publicacao5 = linha.get('Comprovação de publicação ou aceite de publicação (PDF)')
+          self.primeiro_autor5 = linha.get('Primeiro autor')
+          self.media_publicacoes = 0.0
           self.curriculo_lattes = linha.get('Currículo Lattes')
           self.diploma_graduacao = linha.get('Diploma de graduação OU atestado de conclusão de curso OU atestado de provável formando OU atestado de provável formando indicando que irá concluir o curso até 30 de julho de 2023 no caso de ingresso em 2023/2')
           self.diploma_mestrado = linha.get('Se aplicável, cópia do diploma de mestrado OU comprovação de cumprimento de todos requisitos para obtenção do diploma OU atestado indicando que irá concluir o seu curso de mestrado até 30 de julho de 2023 no caso de ingresso em 2023/2')
@@ -85,7 +96,9 @@ class Aluno:
           self.draft = linha.get('Draft')
           self.ip = linha.get('IP')
           self.id_key = linha.get('ID')
-          self.nota_historico = 0
+          self.nota_historico = 0.0
+          self.media_historico = 0.0
+          self.nota_final = 0.0
 
      # DEFINE COMO SERÁ FEITA A IMPRESSÃO DO OBJETO
      def __str__(self):
@@ -133,27 +146,38 @@ class Aluno:
           Local de Publicação 1: {self.local_publicacao1}
           Tipo da Publicação 1: {self.tipo_publicacao1}
           Qualis da Publicação 1: {self.qualis_publicacao1}
+          Nota da Publicação 1: {self.nota_publicacao1}
           Comprovação de Publicação 1: {self.comprovacao_publicacao1}
+          Primeiro Autor 1: {self.primeiro_autor1}
           Título da Publicação 2: {self.titulo_publicacao2}
           Local de Publicação 2: {self.local_publicacao2}
           Tipo da Publicação 2: {self.tipo_publicacao2}
           Qualis da Publicação 2: {self.qualis_publicacao2}
+          Nota da Publicação 2: {self.nota_publicacao2}
           Comprovação de Publicação 2: {self.comprovacao_publicacao2}
+          Primeiro Autor 2: {self.primeiro_autor2}
           Título da Publicação 3: {self.titulo_publicacao3}
           Local de Publicação 3: {self.local_publicacao3}
           Tipo da Publicação 3: {self.tipo_publicacao3}
           Qualis da Publicação 3: {self.qualis_publicacao3}
+          Nota da Publicação 3: {self.nota_publicacao3}
           Comprovação de Publicação 3: {self.comprovacao_publicacao3}
+          Primeiro Autor 3: {self.primeiro_autor3}
           Título da Publicação 4: {self.titulo_publicacao4}
           Local de Publicação 4: {self.local_publicacao4}
           Tipo da Publicação 4: {self.tipo_publicacao4}
           Qualis da Publicação 4: {self.qualis_publicacao4}
+          Nota da Publicação 4: {self.nota_publicacao4}
           Comprovação de Publicação 4: {self.comprovacao_publicacao4}
+          Primeiro Autor 4: {self.primeiro_autor4}
           Título da Publicação 5: {self.titulo_publicacao5}
           Local de Publicação 5: {self.local_publicacao5}
           Tipo da Publicação 5: {self.tipo_publicacao5}
           Qualis da Publicação 5: {self.qualis_publicacao5}
+          Nota da Publicação 5: {self.nota_publicacao5}
           Comprovação de Publicação 5: {self.comprovacao_publicacao5}
+          Primeiro Autor 5: {self.primeiro_autor5}
+          Média das Publicações: {self.media_publicacoes}
           Currículo Lattes: {self.curriculo_lattes}
           Diploma de Graduação: {self.diploma_graduacao}
           Diploma de Mestrado: {self.diploma_mestrado}
@@ -175,9 +199,31 @@ class Aluno:
           Draft: {self.draft}
           IP: {self.ip}
           ID Key: {self.id_key}
+          Nota do Histórico: {self.nota_historico}
+          Média do Histórico: {self.media_historico}
+          Nota Final: {self.nota_final}
           """
 
      def get_tipo_inscricao(self):
           return self.tipo_inscricao
+     
+     def print_reduzido(self):
+          print(f"""
+               Nome Completo: {self.nome_completo}
+               Email: {self.email}
+               Tipo de Inscrição: {self.tipo_inscricao}
+               Nota Histórico: {self.nota_historico}
+               Média Histórico: {self.media_historico}""")
+          
+     def print_notas(self):
+          print(f"""
+               Nota Histórico: {self.nota_historico}
+               Média Histórico: {self.media_historico}
+               Nota Publicação 1: {self.nota_publicacao1}
+               Nota Publicação 2: {self.nota_publicacao2}
+               Nota Publicação 3: {self.nota_publicacao3}
+               Nota Publicação 4: {self.nota_publicacao4}
+               Nota Publicação 5: {self.nota_publicacao5}
+               Média Publicações: {self.media_publicacoes}""")
 
 # END CLASS ALUNO
