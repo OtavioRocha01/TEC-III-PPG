@@ -99,6 +99,8 @@ class Aluno:
           self.nota_historico = 0.0
           self.media_historico = 0.0
           self.nota_final = 0.0
+          self.nota_projeto_doutorado = 0.0
+
 
      # DEFINE COMO SERÁ FEITA A IMPRESSÃO DO OBJETO
      def __str__(self):
@@ -204,9 +206,11 @@ class Aluno:
           Nota Final: {self.nota_final}
           """
 
+     # -- versão 2
      def get_tipo_inscricao(self):
           return self.tipo_inscricao
      
+     # -- versão 2
      def print_reduzido(self):
           print(f"""
                Nome Completo: {self.nome_completo}
@@ -215,7 +219,8 @@ class Aluno:
                Nota Histórico: {self.nota_historico}
                Média Histórico: {self.media_historico}""")
           
-     def print_notas(self):
+     # -- versão 2
+     def print_notas_mestres(self):
           print(f"""
                Nota Histórico: {self.nota_historico}
                Média Histórico: {self.media_historico}
@@ -225,5 +230,19 @@ class Aluno:
                Nota Publicação 4: {self.nota_publicacao4}
                Nota Publicação 5: {self.nota_publicacao5}
                Média Publicações: {self.media_publicacoes}""")
+
+     # -- versão 3
+     def print_notas_doutores(self):
+          print(f"""
+               Nota Histórico: {self.nota_historico}
+               Média Histórico: {self.media_historico}
+               Nota Publicação 1: {self.nota_publicacao1}
+               Nota Publicação 2: {self.nota_publicacao2}
+               Nota Publicação 3: {self.nota_publicacao3}
+               Nota Publicação 4: {self.nota_publicacao4}
+               Nota Publicação 5: {self.nota_publicacao5}
+               Média Publicações: {self.media_publicacoes}
+               Nota Projeto Doutorado: {self.nota_projeto_doutorado}
+               Nota Final: {self.nota_final}""")
 
 # END CLASS ALUNO

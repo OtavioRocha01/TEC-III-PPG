@@ -7,6 +7,7 @@ import Aluno
 
 
 # LÊ UM ARQUIVO CSV E RETORNA UMA LISTA DE INSTÂNCIAS DE ALUNO
+# -- versão 1
 def ler_arquivo_csv(nome_arquivo):
      alunos = []
      # abre o arquivo -- encoding utf-8 é necessário para fazer a leitura corretamente
@@ -19,6 +20,7 @@ def ler_arquivo_csv(nome_arquivo):
 
 
 # BAIXA UM ARQUIVO DE UMA URL E SALVA EM UM DIRETÓRIO ESPECIFICO
+# -- versão 1
 def baixar_arquivos(alunos):
      # n recebe a quantidade de alunos
      n = len(alunos)
@@ -47,6 +49,7 @@ def baixar_arquivos(alunos):
 
 
 # RECEBE O URL PARA DOWNLOAD E O CAMINHO PARA SALVAR O ARQUIVO
+# -- versão 1
 def baixar_pelo_link(url, destino, max_retries=5):
     for attempt in range(max_retries):
         try:
@@ -65,6 +68,7 @@ def baixar_pelo_link(url, destino, max_retries=5):
 
 
 # SEPARA OS ALUNOS DE MESTRADO
+# -- versão 2
 def separar_mestres(alunos):
      mestres = []
      for aluno in alunos:
@@ -74,6 +78,7 @@ def separar_mestres(alunos):
 
 
 # SEPARA OS ALUNOS DE DOUTORADO
+# -- versão 2
 def separar_doutores(alunos):
      doutores = []
      for aluno in alunos:
@@ -83,6 +88,8 @@ def separar_doutores(alunos):
 
 
 # ATUALIZA A NOTA E A MÉDIA DO HISTÓRICO DOS ALUNOS
+# -- versão 2
+# o arquivo histórico tem as notas de história da graduação, para aqueles que se inscreveram no mestrado e médias do mestrado pros que se inscreveram no doutorado
 def get_media_historico(arquivo, alunos):
      with open(arquivo, encoding='utf-8') as arquivo:
           leitor = csv.DictReader(arquivo)
@@ -101,6 +108,7 @@ def get_media_historico(arquivo, alunos):
 
 
 # CONVERTE A QUALIS EM NOTA
+# -- versão 2
 def convert_qualis(qualis, autor):
      nota = 0
      if qualis == 'A1':
@@ -155,7 +163,8 @@ def convert_qualis(qualis, autor):
 
 
 # ATUALIZA A NOTA E A MÉDIA DAS PUBLICAÇÕES DOS ALUNOS
-def get_media_publicacoes(alunos):
+# -- versão 3
+def get_media_publicacoes(alunos, type):
      for aluno in alunos:
           soma = 0
           prim_autor = 0 
@@ -200,80 +209,129 @@ def get_media_publicacoes(alunos):
           else:
                nota += 0 
           
-          if aluno.qualis_publicacao4:
-               qualis = aluno.qualis_publicacao4
-               count += 1
-               if aluno.primeiro_autor4 == 'Sim':
-                    prim_autor = 1
+          if type == 'doutor':
+               if aluno.qualis_publicacao4:
+                    qualis = aluno.qualis_publicacao4
+                    count += 1
+                    if aluno.primeiro_autor4 == 'Sim':
+                         prim_autor = 1
+                    else:
+                         prim_autor = 0
+                    nota = convert_qualis(qualis, prim_autor)
+                    aluno.nota_publicacao4 = nota
+                    soma += nota
                else:
-                    prim_autor = 0
-               nota = convert_qualis(qualis, prim_autor)
-               aluno.nota_publicacao4 = nota
-               soma += nota
-          else:
-               nota += 0 
+                    nota += 0 
      
-          if aluno.qualis_publicacao5:
-               qualis = aluno.qualis_publicacao5
-               count += 1
-               if aluno.primeiro_autor5 == 'Sim':
-                    prim_autor = 1
+          if type == 'doutor':
+               if aluno.qualis_publicacao5:
+                    qualis = aluno.qualis_publicacao5
+                    count += 1
+                    if aluno.primeiro_autor5 == 'Sim':
+                         prim_autor = 1
+                    else:
+                         prim_autor = 0
+                    nota = convert_qualis(qualis, prim_autor)
+                    aluno.nota_publicacao5 = nota
+                    soma += nota
                else:
-                    prim_autor = 0
-               nota = convert_qualis(qualis, prim_autor)
-               aluno.nota_publicacao5 = nota
-               soma += nota
-          else:
-               nota += 0 
+                    nota += 0 
 
           media = soma / count
           aluno.media_publicacoes = media
 
 
 # ATUALIZA A NOTA FINAL DOS ALUNOS
-def get_nota_final(alunos):
-     for aluno in alunos:
-          nota_final = aluno.nota_historico + aluno.media_publicacoes
-          aluno.nota_final = nota_final
+# -- versão 2
+def get_nota_final(alunos, type):
+     if type == 'mestre':
+          for aluno in alunos:
+               nota_final = aluno.nota_historico + aluno.media_publicacoes
+               aluno.nota_final = nota_final 
+     else:
+          for aluno in alunos:
+               nota_final = aluno.nota_historico * .2 + (aluno.media_publicacoes / 2) * .5 + (aluno.nota_projeto_doutorado / 2) * .3
+               aluno.nota_final = nota_final
 
 
 # ESCREVE UM ARQUIVO CSV COM O RANKING FINAL DOS ALUNOS
-def escrever_arquivo_csv(alunos):
-     with open('ranking_final.csv', 'w', newline='', encoding='utf-8') as arquivo:
-          escritor = csv.writer(arquivo)
-          escritor.writerow(['Nome Completo', 'CPF', 'Nota Final'])
-          for aluno in alunos:
-               escritor.writerow([aluno.nome_completo, aluno.cpf, aluno.nota_final])
+# -- versão 3
+def escrever_arquivo_csv(alunos, type):
+     if type == 'mestre':
+          with open('ranking_final_mestrado.csv', 'w', newline='', encoding='utf-8') as arquivo:
+               escritor = csv.writer(arquivo)
+               escritor.writerow(['Nome Completo', 'CPF', 'Nota Final'])
+               for aluno in alunos:
+                    escritor.writerow([aluno.nome_completo, aluno.cpf, aluno.nota_final])
+     else:
+          with open('ranking_final_doutorado.csv', 'w', newline='', encoding='utf-8') as arquivo:
+               escritor = csv.writer(arquivo)
+               escritor.writerow(['Nome Completo', 'CPF', 'Nota Final'])
+               for aluno in alunos:
+                    escritor.writerow([aluno.nome_completo, aluno.cpf, aluno.nota_final])
+
+# ATUALIZA AS NOTAS DO PROJETO DE DOUTORADO PARA DOUTORES
+# -- versão 3
+def set_media_projeto_doutorado(arquivo, alunos):
+     with open(arquivo, encoding='utf-8') as arquivo:
+          leitor = csv.DictReader(arquivo)
+          for linha in leitor:
+               nome = linha['Nome Completo']
+               cpf = linha['CPF']
+               prof1_media = (float(linha['Projeto de Doutorado']) + float(linha['Memorial Acadêmico']) + float(linha['Entrevista'])) / 3
+
+               prof2_media = (float(linha['Projeto de Doutorado']) + float(linha['Memorial Acadêmico']) + float(linha['Entrevista'])) / 3
+               
+               prof3_media = (float(linha['Projeto de Doutorado']) + float(linha['Memorial Acadêmico']) + float(linha['Entrevista'])) / 3
+
+               media = (prof1_media + prof2_media + prof3_media) / 3
+               for aluno in alunos:
+                    if aluno.nome_completo == nome and aluno.cpf == cpf:
+                         aluno.nota_projeto_doutorado = round(media, 2)
 
 
 def main():
      arquivo = 'inscricoes.csv'
      alunos = ler_arquivo_csv(arquivo)
      baixar_arquivos(alunos)
+     get_media_historico('Historicos.csv', alunos)
      
      # MESTRES
      mestres = separar_mestres(alunos)
-     get_media_historico('Historicos.csv', mestres)
-     get_media_publicacoes(mestres)
+     get_media_publicacoes(mestres, 'mestre')
+     get_nota_final(mestres, 'mestre')
+
+     ranking_mestres = []
+     for mestre in mestres:
+          ranking_mestres.append(mestre)
+     
+     ranking_mestres.sort(key=lambda x: x.nota_final, reverse=True)
+
+     # -- versão 3
+     print('Ranking Final para o Mestrado:')
+     for i in range(len(ranking_mestres)):
+          print(f'{i+1}º lugar: {ranking_mestres[i].nome_completo} - {ranking_mestres[i].nota_final}')
+
+     escrever_arquivo_csv(ranking_mestres, 'mestre')
+     
 
      # DOUTORES
      doutores = separar_doutores(alunos)
      get_media_historico('Historicos.csv', doutores)
-     get_media_publicacoes(doutores)
+     get_media_publicacoes(doutores, 'doutor')
+     set_media_projeto_doutorado('projetos_doutorado.csv', doutores)
+     get_nota_final(doutores, 'doutor')
 
-     get_nota_final(alunos)
-
-     ranking_final = []
-     for aluno in alunos:
-          ranking_final.append(aluno)
+     ranking_doutores = []
+     for doutor in doutores:
+          ranking_doutores.append(doutor)
      
-     ranking_final.sort(key=lambda x: x.nota_final, reverse=True)
+     ranking_doutores.sort(key=lambda x: x.nota_final, reverse=True)
+     print('Ranking Final para o Doutorado:')
+     for i in range(len(ranking_doutores)):
+          print(f'{i+1}º lugar: {ranking_doutores[i].nome_completo} - {ranking_doutores[i].nota_final}')
 
-     print('Ranking Final:')
-     for i in range(len(ranking_final)):
-          print(f'{i+1}º lugar: {ranking_final[i].nome_completo} - {ranking_final[i].nota_final}')
+     escrever_arquivo_csv(ranking_doutores, 'doutor')
 
-     escrever_arquivo_csv(ranking_final)
-     
 if __name__ == '__main__':
      main()
